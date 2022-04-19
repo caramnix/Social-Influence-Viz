@@ -6,6 +6,9 @@ import numpy as np
 import streamlit as st 
 
 
+st.markdown("<div style='background:#e6e6e6'><h3 style='font-weight:bold; color:#ec4420'>  Cosponsorship Network, 116th Congress (2019-2021)</h3></div>", unsafe_allow_html=True)
+
+
 url = 'https://github.com/caramnix/Social-Influence/blob/main/adj_matrix_116_House_Fowler.xlsx?raw=true'
 df = pd.read_excel(url)
 
@@ -29,10 +32,24 @@ leg_dict= leg_info.to_dict('index')
 
 nx.set_node_attributes(H, leg_dict)
 
+url3 = 'https://raw.githubusercontent.com/caramnix/Social-Influence/main/connectedness_house_116.csv'
+connectedness_leg= pd.read_csv(url3)
+
+connectedness_leg= connectedness_leg.rename(index= connectedness_leg.iloc[:,0].to_dict()) 
+connectedness_leg2= connectedness_leg.iloc[:,1:]
+
+c_dict= connectedness_leg2.to_dict('index')
+
+nx.set_node_attributes(H, c_dict)
+
 alt.data_transformers.disable_max_rows()
 
-c= nxa.draw_networkx(H, node_color= 'Party', node_tooltip="Full Name").properties(width=700, height=700).configure_view(
-            strokeWidth=0
-        ) #) #, cmap= 'bwr',  
+
+c= nxa.draw_networkx(H, 
+    node_size='Connectedness:Q',
+    node_color= 'Party', 
+    node_tooltip="Full Name").properties(width=700, height=700).interactive()
+
+#c= nxa.draw_networkx(H, node_color= 'Party', node_tooltip="Full Name").properties(width=700, height=700) #) #, cmap= 'bwr',  
 
 st.altair_chart(c)
