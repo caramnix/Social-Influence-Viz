@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st 
 
 
-st.markdown("<div style='background:#e6e6e6'><h3 style='font-weight:bold; color:#ec4420'>  Cosponsorship Network, 116th Congress (2019-2021)</h3></div>", unsafe_allow_html=True)
+st.markdown("<div style='background:#e6e6e6'><h3 style='font-weight:bold; color:#252626'>  Cosponsorship Network, 116th Congress (2019-2021)</h3></div>", unsafe_allow_html=True)
 
 
 url = 'https://github.com/caramnix/Social-Influence/blob/main/adj_matrix_116_House_Fowler.xlsx?raw=true'
@@ -20,6 +20,9 @@ df_array= np.array(df)
 
 G= nx.from_numpy_matrix(df_array)
 H = nx.relabel_nodes(G, labels_dict)
+
+H.remove_edges_from([(n1, n2) for n1, n2, w in H.edges(data="weight") if w < 3])
+
 
 url2= 'https://github.com/caramnix/Social-Influence/raw/main/leginfo_116H.csv'
 leg_info= pd.read_csv(url2) #"/Users/caranix/Library/CloudStorage/OneDrive-TheOhioStateUniversity/Social Influence/Data/Congress/116/House/leginfo_116H.csv")
@@ -45,10 +48,18 @@ nx.set_node_attributes(H, c_dict)
 alt.data_transformers.disable_max_rows()
 
 
+H.remove_nodes_from(list(nx.isolates(H)))
+
 c= nxa.draw_networkx(H, 
     node_size='Connectedness:Q',
     node_color= 'Party', 
-    node_tooltip="Full Name").properties(width=700, height=700).interactive()
+    node_tooltip=["Full Name","Connectedness"],
+    linewidths=0).interactive().properties(width=700, height=700)
+
+#c= nxa.draw_networkx(H, 
+#    node_size='Connectedness:Q',
+#    node_color= 'Party', 
+#    node_tooltip="Full Name").properties(width=700, height=700).interactive()
 
 #c= nxa.draw_networkx(H, node_color= 'Party', node_tooltip="Full Name").properties(width=700, height=700) #) #, cmap= 'bwr',  
 
