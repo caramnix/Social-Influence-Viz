@@ -1,0 +1,8 @@
+vega_datasets
+matplotlib
+seaborn
+altair
+networkx
+nx_altair
+
+ 
