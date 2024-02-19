@@ -18,7 +18,7 @@ df= df.rename(index= df.iloc[:,0].to_dict())
 df= df.iloc[:,1:]
 df_array= np.array(df)
 
-G= nx.from_numpy_matrix(df_array)
+G=  nx.from_numpy_array(df_array) #nx.from_numpy_matrix(df_array)
 H = nx.relabel_nodes(G, labels_dict)
 
 H.remove_edges_from([(n1, n2) for n1, n2, w in H.edges(data="weight") if w < 3])
